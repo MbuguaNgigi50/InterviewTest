@@ -1,32 +1,12 @@
 import DropdownView from "@/components/dropdownView";
 import TableView from "@/components/tableView";
-import { getProducts, getProductsPlans } from "@/lib/products";
 import { Metadata } from "next";
-
-import { Plans } from "@prisma/client";
-import { Products } from "@prisma/client";
 
 export const metadata: Metadata = {
 	title: "Home Page",
 };
 
-interface Props {
-	planItems: Plans[];
-	productItems: Products[];
-}
-
-export default async function HomePage({ planItems, productItems }: Props) {
-	const products = await getProducts();
-	const getList = await getProductsPlans();
-
-	const formatList = planItems.map((item) => ({
-		label: item.planName,
-		value: item.planId,
-	}));
-	const getDrop = productItems.map((item) => ({
-		label: item.productName,
-		value: item.productId,
-	}));
+export default async function HomePage(){
 	return (
 		<>
 			<div className='relative h-screen items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0'>
