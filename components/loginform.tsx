@@ -42,7 +42,7 @@ export function UserLoginAuthForm({
 				.then((callback) => {
 					if (!callback?.error) {
 						toast.success("Login Successful");
-						router.push("/home");
+						router.push("/home-page");
 					}
 					if (callback?.error) {
 						toast.error(callback.error);
