@@ -16,8 +16,8 @@ export const {
 	adapter: PrismaAdapter(db),
 	debug: process.env.NODE_ENV !== "production",
 	callbacks: {
-		async signIn({ user}) {
-			const existingUser = await getUserById(user.id)
+		async signIn({ user, account}) {
+			const existingUser = await getUserById(user.id as any)
 
 			if (!existingUser) {
 				return false;
