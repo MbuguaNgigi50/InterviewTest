@@ -21,6 +21,6 @@ model Products {
 }
 
 model Plans {
-  id String @id
-  plans String
+  planId String @id @default(uuid())
+  planName String
 }
