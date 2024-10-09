@@ -15,7 +15,7 @@ export default async function DropdownView() {
 
     return (
 			<>
-				{productList?.map((product) => {
+				{productList?.map((product: any) => {
 					<select
 						key={product.value}
 						onSelect={() => {

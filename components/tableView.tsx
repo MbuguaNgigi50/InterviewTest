@@ -15,7 +15,7 @@ export default async function TableView() {
 
 	return (
 		<>
-			{plansList?.map((productPlan) => {
+			{plansList?.map((productPlan: any) => {
 				<table key={productPlan.value}>{productPlan.label}</table>;
 			})}
 		</>
