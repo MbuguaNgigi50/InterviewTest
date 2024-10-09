@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { getProducts, pushProducts } from "@/lib/products";
 
-export default async function DropdownView() {
+export async function DropdownView() {
 
     const products = await getProducts();
 

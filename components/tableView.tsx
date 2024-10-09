@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { getProductsPlans } from "@/lib/products";
 
-export default async function TableView() {
+export async function TableView() {
 
 	const plans = await getProductsPlans();
 

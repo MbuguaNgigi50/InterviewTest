@@ -1,5 +1,5 @@
-import DropdownView from "@/components/dropdownView";
-import TableView from "@/components/tableView";
+import {DropdownView} from "@/components/dropdownView";
+import {TableView} from "@/components/tableView";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
