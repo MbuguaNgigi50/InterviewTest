@@ -6,7 +6,7 @@ export const metadata: Metadata = {
 	title: "Home Page",
 };
 
-export default async function HomePage(){
+export default function HomePageLanding(){
 	return (
 		<>
 			<div className='relative h-screen items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0'>
