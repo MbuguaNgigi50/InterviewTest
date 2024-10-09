@@ -1,3 +1,5 @@
+'use client'
+
 import DropdownView from "@/components/dropdownView";
 import TableView from "@/components/tableView";
 import { Metadata } from "next";
