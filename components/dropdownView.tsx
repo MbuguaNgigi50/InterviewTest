@@ -8,7 +8,7 @@ export default async function DropdownView() {
 
     const products = await getProducts();
 
-    const productList = products?.map((item) => ({
+    const productList = products?.map((item: any) => ({
         label: item.productName,
         value: item.productId
     }))

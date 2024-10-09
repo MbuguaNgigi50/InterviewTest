@@ -8,7 +8,7 @@ export default async function TableView() {
 
 	const plans = await getProductsPlans();
 
-	const plansList = plans?.map((item) => ({
+	const plansList = plans?.map((item: any) => ({
 		label: item.planName,
 		value: item.planId,
 	}));

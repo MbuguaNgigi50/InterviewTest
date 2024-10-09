@@ -37,7 +37,7 @@ export function UserLoginAuthForm({
 	});
 
 	const onSubmit = (values: z.infer<typeof LoginFormSchema>) => {
-		React.startTransition(() => {
+		startTransition(() => {
 			login(values)
 				.then((callback) => {
 					if (!callback?.error) {

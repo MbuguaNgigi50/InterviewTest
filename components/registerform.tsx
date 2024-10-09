@@ -38,7 +38,7 @@ export function UserRegisterAuthForm({
 	});
 
 	const onSubmit = (values: z.infer<typeof RegistrationFormSchema>) => {
-		React.startTransition(() => {
+		startTransition(() => {
 			register(values)
 				.then((callback) => {
 					if (callback.success && !callback?.error) {
