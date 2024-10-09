@@ -4,7 +4,6 @@ import { UserLoginAuthForm } from "@/components/loginform";
 
 export const metadata: Metadata = {
 	title: "Login to your Account",
-	description: "Login Flow.",
 };
 
 export default function LoginPage() {

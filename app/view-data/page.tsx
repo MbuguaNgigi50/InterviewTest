@@ -1,5 +1,3 @@
-'use client'
-
 import DropdownView from "@/components/dropdownView";
 import TableView from "@/components/tableView";
 import { Metadata } from "next";
@@ -8,7 +6,7 @@ export const metadata: Metadata = {
 	title: "Home Page",
 };
 
-export default function HomePageLanding(){
+export default function Views(){
 	return (
 		<>
 			<div className='relative h-screen items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0'>
