@@ -3,24 +3,35 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
-model UserLogin {
-  id String @id @default(cuid())
-  email String @unique
-  password String
+model User {
+  id            String    @id @default(cuid())
+  password      String?
+  email         String?   @unique
+
+  sessions      Session[]
   @@unique([id, email])
+  @@map(name: "Users")
 }
 
 model Products {
-  productId String @id @default(uuid())
-  productName String @unique
+  id String @id @default(cuid())
+  productName String
 }
 
 model Plans {
-  planId String @id @default(uuid())
+  id String @id @default(cuid())
   planName String
+}
+
+model Session {
+  id        String   @id
+  userId    String
+  expiresAt DateTime
+
+  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
 }

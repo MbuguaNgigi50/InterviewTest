@@ -3,10 +3,10 @@
 import * as z from "zod";
 
 import { LoginFormSchema } from "@/schemas";
-import { signIn } from "@/lib/auth";
-import { AuthError } from "next-auth";
-import { getUserByEmail } from "@/lib/users";
-
+import { getUserByEmail } from "@/lib/user";
+import { compare } from "bcryptjs";
+import { lucia } from "@/lib/auth";
+import { cookies } from "next/headers";
 
 export const login = async (values: z.infer<typeof LoginFormSchema>) => {
 	const validatedFields = LoginFormSchema.safeParse(values);
@@ -19,33 +19,36 @@ export const login = async (values: z.infer<typeof LoginFormSchema>) => {
 
 	const { email, password } = validatedFields.data;
 
-	const existingUser = await getUserByEmail(email);
-
-	if (!existingUser || !existingUser.email || !existingUser.password) {
-		return {
-			error: "Email Does Not Exist",
-		};
-	}
-
 	try {
-		await signIn("credentials", {
-			email,
-			password,
-			redirectTo: "/view-data",
-		});
-	} catch (error) {
-		if (error instanceof AuthError) {
-			switch (error.type) {
-				case "CallbackRouteError":
-					return {
-						error: "Invalid Credentials",
-					};
-				default:
-					return {
-						error: "Something Went Wrong",
-					};
-			}
+		//Checking to see if the user's email exists or if the passed email is tied to an account
+		const existingUser = await getUserByEmail(email);
+
+		//Checking to see if the user trying to login has an active account after first registration
+		if (!existingUser || !existingUser.email || !existingUser.password) {
+			return {
+				error: "Email Does Not Exist",
+			};
 		}
-		throw error;
+        
+		const isPasswordValid = await compare(password, existingUser.password);
+
+		if (!isPasswordValid) {
+			throw new Error("Invalid Credentials");
+		}
+
+		const session = await lucia.createSession(existingUser.id, {});
+		const sessionCookie = lucia.createSessionCookie(session.id);
+		cookies().set(
+			sessionCookie.name,
+			sessionCookie.value,
+			sessionCookie.attributes
+		);
+		return {
+			success: true
+		};
+	} catch (error: any) {
+		return {
+			error: "Something Went Wrong",
+		};
 	}
 };

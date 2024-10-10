@@ -6,7 +6,5 @@ const envSchema = z.object({
 	DIRECT_URL: z.string().min(1, "Missing Direct URL"),
 	AUTH_SECRET: z.string().min(1, "Missing Auth Secret"),
 });
-/**
- * Ensures Validation for Environment Variables
- */
+
 export const parsedEnv = envSchema.parse(process.env);

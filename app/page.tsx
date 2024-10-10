@@ -1,8 +1,14 @@
 export default function Home() {
   return (
-    <div>
-      <a href="/login">Login</a>
-      <a href="/register">Register</a>
-    </div>
-  );
+		<>
+			<a href='/login'>
+				<button>Login</button>
+      </a>
+      
+
+			<a href='/register'>
+				<button>Register</button>
+			</a>
+		</>
+	);
 }

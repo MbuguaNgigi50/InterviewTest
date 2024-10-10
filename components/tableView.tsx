@@ -1,23 +1,35 @@
-"use client";
+import { getPlan } from "@/lib/data";
+import { Plans } from "@prisma/client";
 
-import * as React from "react";
+interface PlansProps {
+	items: Plans[];
+}
 
-import { getProductsPlans } from "@/lib/products";
+export default async function TableView({ items = [] }: PlansProps) {
 
-export async function TableView() {
-
-	const plans = await getProductsPlans();
-
-	const plansList = plans?.map((item: any) => ({
+	const formatList = items.map((item) => ({
 		label: item.planName,
-		value: item.planId,
+		value: item.id,
 	}));
 
 	return (
 		<>
-			{plansList?.map((productPlan: any) => {
-				<table key={productPlan.value}>{productPlan.label}</table>;
-			})}
+			<table>
+				<thead>
+					<tr>
+						<th>PRODUCT NAME</th>
+					</tr>
+				</thead>
+				<tbody>
+					{formatList.map((item) => {
+						return (
+							<tr key={item.value}>
+								<td>{item.label}</td>
+							</tr>
+						);
+					})}
+				</tbody>
+			</table>
 		</>
 	);
 }

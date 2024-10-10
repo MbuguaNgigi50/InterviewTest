@@ -1,3 +1,4 @@
+//Zod Packages
 import * as z from "zod";
 
 export const LoginFormSchema = z.object({
@@ -30,3 +31,11 @@ export const RegistrationFormSchema = z
 		path: ["confirmPassword"],
 		message: "The Passwords do not match",
 	});
+
+export const ProductsSchema = z.object({
+	productName: z
+		.string()
+		.min(1, "Product is required")
+		.max(40, "Password cannot be more than 40 characters")
+		.toLowerCase(),
+});

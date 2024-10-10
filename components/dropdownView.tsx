@@ -1,30 +1,35 @@
-"use client";
+'use client'
 
-import * as React from "react";
+import { planAdd } from "@/lib/data";
+import { Products } from "@prisma/client";
 
-import { getProducts, pushProducts } from "@/lib/products";
+interface ProductProps {
+	items: Products[]
+}
 
-export async function DropdownView() {
+export function DropDownView({
+	items = []
+}: ProductProps) {
 
-    const products = await getProducts();
+	const formatList = items.map((item) => ({
+		label: item.productName,
+		value: item.id
+	}))
 
-    const productList = products?.map((item: any) => ({
-        label: item.productName,
-        value: item.productId
-    }))
-
-    return (
-			<>
-				{productList?.map((product: any) => {
-					<select
-						key={product.value}
-						onSelect={() => {
-							pushProducts(product.value, product.label);
-						}}
-					>
-						{product.label}
-					</select>;
-				})}
-			</>
-		);
+	return (
+		<>
+			<div className ="d-flex justify-content-center mt-5">
+				<select
+					onSelect={handleSubmit}
+				>
+					{formatList.map((products) => (
+						<option key={products.value}>
+							{products.label}
+						</option>
+					))
+					}
+				</select>
+				</div>
+		</>
+	);
 }

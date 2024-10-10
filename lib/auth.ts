@@ -1,55 +1,77 @@
-import NextAuth from "next-auth";
-import authConfig from "@/lib/auth.config";
-
-import { getUserById } from "@/lib/users";
-
-import { PrismaAdapter } from "@auth/prisma-adapter";
+import { Lucia, TimeSpan } from "lucia";
 import { db } from "@/lib/db";
-import { parsedEnv } from "@/env";
+import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
+import { cache } from "react";
+import { cookies } from "next/headers";
 
-export const {
-	handlers: { GET, POST },
-	auth,
-	signIn,
-	signOut,
-} = NextAuth({
-	adapter: PrismaAdapter(db),
-	debug: process.env.NODE_ENV !== "production",
-	callbacks: {
-		async signIn({ user, account}) {
-			const existingUser = await getUserById(user.id as any)
+/*
+Creating the Prisma Adapter that will take both the user and session
+*/
+const adapter = new PrismaAdapter(db.session, db.user);
 
-			if (!existingUser) {
-				return false;
-			}
-			return true;
-		},
-		async session({ token, session }) {
-			if (token.sub && session.user) {
-				session.user.id = token.sub;
-			}
-
-			console.log("Session Callback Token", token);
-			return session;
-		},
-		async jwt({ token }) {
-			if (!token.sub) return token;
-
-			const existingUser = await getUserById(token.sub);
-
-			if (!existingUser) {
-				return token;
-			}
-
-			console.log("JWT Callback Token", token);
-			return token;
+export const lucia = new Lucia(adapter, {
+	sessionExpiresIn: new TimeSpan(4, "w"), // 4 weeks
+	sessionCookie: {
+		// this sets cookies with super long expiration
+		// since Next.js doesn't allow Lucia to extend cookie expiration when rendering pages
+		name: "auth-session",
+		expires: false,
+		attributes: {
+			// set to `true` when using HTTPS
+			secure: process.env.NODE_ENV === "production",
+			sameSite: "strict",
 		},
 	},
-	secret: parsedEnv.AUTH_SECRET,
-	session: {
-		strategy: "jwt",
-		maxAge: 30 * 24 * 60 * 60,
-		updateAge: 24 * 60 * 60,
+	getUserAttributes: (attributes) => {
+		return {
+			id: attributes.id,
+			email: attributes.email,
+		};
 	},
-	...authConfig,
 });
+
+export const validateRequest = cache(async () => {
+	const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
+	if (!sessionId) {
+		return {
+			user: null,
+			session: null,
+		};
+	}
+
+	const { user, session } = await lucia.validateSession(sessionId);
+	try {
+		if (session && session.fresh) {
+			const sessionCookie = lucia.createSessionCookie(session.id);
+			cookies().set(
+				sessionCookie.name,
+				sessionCookie.value,
+				sessionCookie.attributes
+			);
+		}
+		if (!session) {
+			const sessionCookie = lucia.createBlankSessionCookie();
+			cookies().set(
+				sessionCookie.name,
+				sessionCookie.value,
+				sessionCookie.attributes
+			);
+		}
+	} catch {}
+	return {
+		user,
+		session,
+	};
+});
+
+declare module "lucia" {
+	interface Register {
+		Lucia: typeof lucia;
+		DatabaseUserAttributes: DatabaseUserAttributes;
+	}
+}
+
+interface DatabaseUserAttributes {
+	id: string;
+	email: string;
+}
