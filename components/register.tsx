@@ -39,7 +39,7 @@ export function UserRegisterForm({ className, ...props }: UserRegisterFormProps)
 		},
 	});
 
-	const onRegister = (values: z.infer<typeof RegistrationFormSchema>) => {
+	function onRegister(values: z.infer<typeof RegistrationFormSchema>){
 		startTransition(() => {
 			register(values)
 				.then((callback) => {

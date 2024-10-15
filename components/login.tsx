@@ -39,7 +39,7 @@ export function UserLoginForm({ className, ...props }: UserLoginFormProps) {
 		},
 	});
 
-	const onLogin = (values: z.infer<typeof LoginFormSchema>) => {
+	function onLogin(values: z.infer<typeof LoginFormSchema>){
 		startTransition(() => {
 			login(values)
 				.then((callback) => {

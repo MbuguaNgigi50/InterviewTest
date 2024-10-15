@@ -20,7 +20,6 @@ export const register = async (
 		};
 	}
 
-	//Destructuring the fields
 	const { email, password } = validatedFields.data;
 
 	try {
@@ -54,7 +53,7 @@ export const register = async (
 		};
 	} catch (error: any) {
 		return {
-			error: "Something Went Wrong",
+			error: "Something Went Wrong"
 		};
 	}
 };

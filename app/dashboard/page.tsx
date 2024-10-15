@@ -1,12 +1,11 @@
-import {AddProducts} from "@/components/addProducts";
-import {DropDownView} from "@/components/dropdownView";
+import { AddProducts } from "@/components/addProducts";
+import { DropDownView } from "@/components/dropdownView";
 import TableView from "@/components/tableView";
 import { db } from "@/lib/db";
 
 export default async function DashboardPage() {
-	const productsList = await db.products.findMany()
-
-	const plansList = await db.plans.findMany()
+	const productsList = await db.products.findMany();
+	const plansList = await await db.plans.findMany()
 
 	return (
 		<>
@@ -15,7 +14,7 @@ export default async function DashboardPage() {
 			</div>
 
 			<div>
-				<DropDownView items={productsList} />
+				<DropDownView items={productsList}/>
 			</div>
 
 			<div>

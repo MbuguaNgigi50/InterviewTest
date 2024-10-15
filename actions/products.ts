@@ -4,7 +4,7 @@ import * as z from "zod";
 import { ProductsSchema } from "@/schemas";
 import { db } from "@/lib/db";
 
-export const productAdd = async (values: z.infer<typeof ProductsSchema>) => {
+export async function productAdd(values: z.infer<typeof ProductsSchema>){
 	const validatedFields = ProductsSchema.safeParse(values);
 
 	if (!validatedFields.success) {
@@ -16,7 +16,7 @@ export const productAdd = async (values: z.infer<typeof ProductsSchema>) => {
 	const { productName } = validatedFields.data;
 
 	try {
-		const product = await db.products.create({
+		await db.products.create({
 			data: {
 				productName: productName,
 			},
@@ -29,5 +29,31 @@ export const productAdd = async (values: z.infer<typeof ProductsSchema>) => {
 		return {
 			error: "Something Went Wrong",
 		};
+	}
+};
+
+export async function planAdd(value: string) {
+	try {
+		const product = await db.plans.create({
+			data: {
+				planName: value,
+			},
+		});
+		return {
+			success: true
+		}
+	} catch (error: any) {
+		return {
+			error: "Something Went Wrong"
+		}
+	}
+}
+
+export async function getPlan(){
+	try {
+		const plans = await db.plans.findMany();
+		return plans;
+	} catch (error) {
+		return null;
 	}
 };

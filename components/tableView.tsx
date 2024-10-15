@@ -1,13 +1,14 @@
-import { getPlan } from "@/lib/data";
+'use client'
+
 import { Plans } from "@prisma/client";
 
 interface PlansProps {
 	items: Plans[];
 }
 
-export default async function TableView({ items = [] }: PlansProps) {
-
-	const formatList = items.map((item) => ({
+export default function TableView({ items = [] }: PlansProps) {
+	
+	const formattedList = items.map((item) => ({
 		label: item.planName,
 		value: item.id,
 	}));
@@ -21,7 +22,7 @@ export default async function TableView({ items = [] }: PlansProps) {
 					</tr>
 				</thead>
 				<tbody>
-					{formatList.map((item) => {
+					{formattedList.map((item) => {
 						return (
 							<tr key={item.value}>
 								<td>{item.label}</td>

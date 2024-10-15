@@ -1,35 +1,43 @@
-'use client'
+"use client";
 
-import { planAdd } from "@/lib/data";
+import { planAdd } from "@/actions/products";
 import { Products } from "@prisma/client";
+import { ChangeEvent, useState } from "react";
 
 interface ProductProps {
-	items: Products[]
+	items: Products[];
 }
 
-export function DropDownView({
-	items = []
-}: ProductProps) {
-
+export function DropDownView({ items = [] }: ProductProps) {
 	const formatList = items.map((item) => ({
-		label: item.productName,
-		value: item.id
-	}))
+		name: item.productName,
+		value: item.id,
+	}));
+
+	const [value, setValue] = useState("");
+
+	function handleSubmit(event: ChangeEvent<HTMLSelectElement>){
+		setValue(event.target.value);
+		// const prodValue = event.target.value
+		// console.log("This is an updated value: ", prodValue)
+		planAdd(event.target.value);
+	};
 
 	return (
 		<>
-			<div className ="d-flex justify-content-center mt-5">
+			<div className='d-flex justify-content-center mt-5'>
+				<h1>The currently selected item is {value}</h1>
 				<select
-					onSelect={handleSubmit}
-				>
+					name='Dropdown Menu'
+					onChange={handleSubmit}>
+					<option></option>
 					{formatList.map((products) => (
-						<option key={products.value}>
-							{products.label}
+						<option key={products.value} value={products.name}>
+							{products.name}
 						</option>
-					))
-					}
+					))}
 				</select>
-				</div>
+			</div>
 		</>
 	);
 }
